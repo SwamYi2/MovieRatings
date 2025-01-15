@@ -1,0 +1,68 @@
+{% extends "ratings50/layout.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %} New Movie {% endblock %}
+{% block body %}
+    <div class="form-body">
+        {% if new %}
+            <h3>Add a movie</h3>
+            <form action="{% url 'new' %}" enctype="multipart/form-data" method="post">
+        {% else %}
+            <h3>Edit</h3>
+            <form action="{% url 'edit' movie_id %}" enctype="multipart/form-data" method="post">
+        {% endif %}
+            {% csrf_token %}
+            {% for field in form %}
+                {% if field != form.genre %}
+                    <div class="form-group">
+                        <label for="{{ field.id }}">{{ field.label }}:</label>
+                        {% render_field field class='form-control' %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="genre-boxes">
+                {% for genre in form.genre %}
+                    <div class="genre">
+                        {{ genre }}
+                    </div>
+                {% endfor %}
+            </div>
+            <input type="submit" value="Upload">
+        </form>
+        <div class="container-fluid bg-dark text-white pt-1 my-1">
+            Does your movie already exists on Tmdb? <br>
+            Find it on Tmdb here
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                    <label for="tmdb-title">Title:</label>
+                    <input class="form-control" type="text" id="tmdb-title">
+                    <label for="tmdb-year">release-date:</label>
+                    <input class="form-control" type="number" id="tmdb-year">
+                    <input type="submit" value="Tmdb Search" id="tmdb-search">
+            </div>
+            <div class="col" id="tmdb-results">
+            </div>
+        </div>
+        <template id="result-template">
+            <div class="container p-2 my-2 bg-dark text-white" style="border: solid grey 1px;">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img src="" id="poster">
+                    </div>
+                    <div class="col">
+                        <p id="title">The Result Movie</p>
+                        <p id="release-date">2020</p>
+                        <button type="button" onclick="fill_id(this)" id="id-button" 
+                        data-id="" class="btn btn-primary">Use TMDB ID</button>
+                        <button type="button" onclick="fill_data(this)" id="data-button" 
+                        data-id="" class="btn btn-primary">Use TMDB Data</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'ratings50/new_movie.js' %}"></script>
+{% endblock %}

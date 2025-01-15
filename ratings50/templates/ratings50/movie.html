@@ -1,0 +1,198 @@
+{% extends 'ratings50/layout.html' %}
+{% load static %}
+
+{% block title %}
+    {{ movie.title }}
+{% endblock %}
+
+{% block body %}
+    <!--The big container-->
+    <div class="movie-container" data-movie_id="{{ movie.id }}">
+        <div class="row">
+          <!--The poster and movie details-->
+            <div class="col-xl-3">
+                {% if movie.poster %}
+                    <img src="/ratings50{{ movie.poster.url }}">
+                {% endif %}
+            </div>
+            <div class="col-xl-9">
+                <div class="details">
+                    <h2>{{ movie.title }}</h2>
+                    <p class="certification">{{ movie.certification }}</p>
+                    {% if movie.release_date %}
+                      <p>{{ movie.release_date }}</p>
+                    {% else %}
+                      <p>Release date not available</p>
+                    {% endif %}
+                    <!--Rating -->
+                    <div class="ratings">
+                        {% if movie.avg_rating %}
+                            <p id="rating-score"><span class="fa fa-star checked"></span> {{ movie.avg_rating }}/10</p>
+                        {% else %}
+                            <p id="rating-score"><span class="fa fa-star"></span>Not Available</p>
+                        {% endif %}
+                        {% if movie.user_rating %}
+                            <button id="user-rating" type="button" class="btn btn-primary" 
+                            data-bs-toggle="modal" data-bs-target="#rate-modal">
+                            <span class="fa fa-star checked"></span>Your rating: {{movie.user_rating.score}}/10
+                            </button>
+                        {% else %}
+                            <button id="user-rating" type="button" class="btn btn-primary" 
+                            data-bs-toggle="modal" data-bs-target="#rate-modal">
+                            <span class="fa fa-star"></span>Rate
+                            </button>
+                        {% endif %}
+                    </div>
+                    <h4 class="genres">{% for gen in movie.genre.all %}
+                        <form class="form-inline" action="{% url 'search' %}" method="post">
+                            {% csrf_token %}
+                            <input type="checkbox" value="{{ gen.id }}" name="genre" checked hidden>
+                            <input type="submit" class="btn btn-outline-info btn-sm" value="{{ gen.name }}">
+                        </form>
+                        {% endfor %}
+                    </h4>
+                    {% if movie.director %}
+                      <p>Director: {{ movie.director }}</p>
+                    {% else %}
+                      <p>Director: unknown</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <!--Place for overview and trailer iframe-->
+        <div class="row">
+            <div class="col-lg-6">
+                <p>{{ movie.overview }}</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="iframe-container">
+                {% if movie.trailer_url %}
+                <iframe width="100%" height="auto" src="{{ movie.trailer_url }}"></iframe>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <!--Reviews-->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#review-modal">
+            Write a review
+          </button>
+        <div class="container bg-danger text-white pt-2 my-2" id="review-error"></div>
+        <div class="row">
+          <div class="col-md-6" id="reviews">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <a href="{% url 'edit' movie.id %}">Edit Movie</a><br>
+            <a href="{% url 'editlog' movie.id %}">View Edit History</a>
+          </div>
+        </div>
+    </div>
+
+    <!-- Rating model -->
+    <div class="modal fade" id="rate-modal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Rate this movie</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container rounded pt-1 my-1 bg-danger text-white" id="error"></div>
+                <div class="stars">
+                <span class="fa-solid fa-star" data-value="1"></span>
+                <span class="fa-solid fa-star" data-value="2"></span>
+                <span class="fa-solid fa-star" data-value="3"></span>
+                <span class="fa-solid fa-star" data-value="4"></span>
+                <span class="fa-solid fa-star" data-value="5"></span>
+                <span class="fa-solid fa-star" data-value="6"></span>
+                <span class="fa-solid fa-star" data-value="7"></span>
+                <span class="fa-solid fa-star" data-value="8"></span>
+                <span class="fa-solid fa-star" data-value="9"></span>
+                <span class="fa-solid fa-star" data-value="10"></span>
+                </div>
+                <input type="hidden" id="score" value="{{ movie.user_rating.score }}">
+                <input type="hidden"  id="movie_id" value="{{ movie.id }}">
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" id="rate-btn" class="btn btn-primary col-12">Rate</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Review Modal -->
+      <div class="modal fade" id="review-modal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Add a review</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="rating-info">
+                {% if movie.user_rating.score %}
+                <p>Your Rating:  <i class="fa-solid fa-star checked"></i>{{ movie.user_rating.score }}/10</p>
+                {% else %}
+                  <div class="container bg-danger text-white my-2 pt-2">You need to Rate the movie first</div>
+                {% endif %}
+              </div>
+              <div class="container bg-danger text-white pt-2 my-2" id="error"></div>
+              <label for="headline">Headline:</label><br>
+              <input type="text" name="headline" class="form-control" id="headline">
+              <label for="review">Write your review:</label><br>
+              <textarea name="review" class="form-control" id="review"></textarea>
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              {% if movie.user_rating.score %}
+              <button type="button" id="review-btn" class="btn btn-primary col-12">Post</button>
+              {% else %}
+              <button disabled type="button" id="review-btn" class="btn btn-primary col-12">Post</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <template class="review-temp">
+        <div class="container bg-dark my-2 rounded">
+          <div class="row">
+            <div class="col-1">
+              <i id="up-arrow" class="fa-solid fa-caret-up fa-xl"></i><br>
+              <p id="vote-count"></p>
+              <i id="down-arrow" class="fa solid fa-caret-down fa-xl"></i> 
+            </div>
+            <div class="col-11">
+              <p class="rating"></p>
+              <p class="username"></p>
+              <p class="headline"></p>
+              <p class="review"></p>
+              <p class="datetime"></p>
+            </div>
+            <div class="delete">
+              <p id="confirm" style="display: none;">Are you sure you want to delete this?</p>
+              <button disabled type="button" id="delete-btn" class="btn btn-danger">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'ratings50/movie.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,4 @@
+django-widget-tweaks==1.4.12
+pillow
+setuptools
+requests

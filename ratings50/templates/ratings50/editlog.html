@@ -1,0 +1,27 @@
+{% extends 'ratings50/layout.html' %}
+
+{% block title %}
+    Edit History of {{ title }}
+{% endblock %}
+{% block body %}
+    <div class="editlog-body">
+        <div class="container pt-2 my-2">
+            {% for edit in editlog %}
+                <div class="container bg-dark text-white pt-1 my-1 edit-container">
+                    <p>{{ edit.user.username }}</p>
+                    <p id="changes" class="container bg-white text-dark pt-1 my-1 rounded">{{ edit.changes }}</p>
+                    <p>{{ edit.date }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        var edits = document.querySelectorAll(".edit-container");
+        edits.forEach(edit => {
+            var changes = edit.querySelector("#changes");
+            var text = changes.innerHTML;
+            var line_br_text = text.replace(/\n/g, "<br>");
+            changes.innerHTML = line_br_text;
+        })
+    </script>
+{% endblock %}

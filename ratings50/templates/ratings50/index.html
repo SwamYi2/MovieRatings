@@ -1,0 +1,62 @@
+{% extends 'ratings50/layout.html' %}
+
+{% block title %}
+    {{ movie.title }}
+{% endblock %}
+
+{% block body %}
+    {% if heading %}
+    <h3 id="heading">{{ heading }}</h3><br>
+    {% endif %}
+    <div class="index-body">
+        {% for movie in page %}
+            <div class="movie-card">
+                <a href="{% url 'movie' movie.id %}">
+                <div class="poster-container">
+                  {% if movie.poster %}
+                    <img src="/ratings50{{ movie.poster.url }}" alt="poster of {{ movie.title }}">
+                  {% endif %}
+                  <div class="bottom-left">
+                    {% if movie.avg_rating %}
+                      <span class="fa fa-star checked"></span>{{ movie.avg_rating }}
+                    {% else %}
+                      <span class="fa fa-star"></span>
+                    {% endif %}
+                  </div>
+                </div>
+                <p><b>{{ movie.title }}</b></p>
+                <p>{{ movie.release_date }} </p>
+            </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if pagination %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center dark">
+          {% if page.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">
+            {{ page.previous_page_number }}</a></li>
+          {% endif %}
+          <li class="page-item active"><a class="page-link" href="?page={{ page.number }}">
+            {{ page.number }}</a></li>
+          {% if page.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">
+            {{ page.next_page_number }}</a></li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+{% endblock %}

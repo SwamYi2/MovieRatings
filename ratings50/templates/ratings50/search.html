@@ -1,0 +1,51 @@
+{% extends 'ratings50/layout.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block body %}
+    <div class="search-form">
+        <form action="{% url 'search' %}" method="post">
+            {% csrf_token %}
+            <label for="{{ form.title.id }}">{{ form.title.label }}:</label>
+            {% render_field form.title class='form-control' %}
+            <div class="genre-boxes">
+                {% for genre in form.genre %}
+                    <div class="genre">
+                        {{ genre }}
+                    </div>
+                {% endfor %}
+            </div>
+            <input type="submit" class="btn btn-primary" value="Search">
+        </form>
+    </div>
+
+    <script>
+
+        window.addEventListener('pageshow', (event) => {
+            let genres = document.querySelector(".genre-boxes");
+            genres.querySelectorAll('.genre').forEach(div => {
+                if (div.querySelector('input').checked) {
+                    div.className = 'genre checked';
+                } else {
+                    div.className = 'genre';
+                }
+            });
+        });
+
+        document.querySelectorAll('.genre').forEach(div => {
+            div.addEventListener('click', () => {
+                if (div.querySelector('input').checked) {
+                    div.querySelector('input').checked = false;
+                    div.className = 'genre';
+                } else {
+                    div.querySelector('input').checked = true;
+                    div.className = 'genre checked';
+                }
+            });
+        });
+    </script>
+{% endblock %}

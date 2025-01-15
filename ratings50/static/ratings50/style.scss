@@ -1,0 +1,202 @@
+$dark-color1: #31373f;
+$dark-color2: #1b2632;
+$dark-low-opacity: #31373fa0;
+
+#register-form, #login-form {
+    color: white;
+}
+
+.page-body {
+    background-color: $dark-color2;
+}
+//search and new movie form
+.form-body, .search-form {
+    background-color: $dark-color1;
+    padding: 2%;
+    margin: 1%;
+    color: white;
+    label {
+        color: white;
+    }
+    .form-control {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    #poster-clear_id, label[for=poster-clear_id] {
+        display: none;
+    }
+    .genre-boxes {
+        .genre {
+            display: inline-block;
+            padding: 5px;
+            margin: 5px;
+            border: solid grey 1px;
+            background-color: $dark-color1;
+        }
+        input {
+            display: none;
+        }
+        .checked {
+            background-color: grey;
+        }
+    }
+    
+    .form-group {
+        color: white;
+    }
+}
+
+//Movie page
+#heading {
+    color: white;
+}
+.movie-container {
+    background-color: $dark-low-opacity;
+    border-radius: 20px;
+    padding: 2%;
+    margin: 1%;
+    color: white;
+
+    @media only screen and (max-width: 425px) {
+        .details {
+            text-align: center;
+            .certification {
+                margin: auto;
+            }
+        }
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+    }
+    img {
+        max-height: 300px;
+        max-width: 300px;
+        overflow-x: hidden;
+        padding-top: 10px;
+    }
+
+    .ratings {
+        #rating-score {
+            background-color: green;
+            border-radius: 10px;
+            width: fit-content;
+            padding: 0.5em;
+            display: inline;
+            vertical-align: baseline;
+    
+            .rating-star {
+                font-size: 1.5em;
+            }
+        }
+        #user-rating {
+            display: inline;
+            vertical-align: baseline;
+        }
+
+        .checked{
+            color: gold;
+        }
+    }
+
+    .genres {
+        margin-top: 0.3em;
+        margin-bottom: 0.3em;
+        display: flex;
+        flex-wrap: wrap;
+
+        input {
+            margin-right: 0.2em;
+        }
+    }
+
+    .certification {
+        border: solid 1px white;
+        width: fit-content;
+    }
+
+    .over-and-trailer {
+        min-height: 360px;
+    }
+
+    #reviews .delete {
+        text-align: right;
+    }
+
+    #review-error {
+        display: none;
+    }
+}
+// Modals for Movie
+#rate-modal, #review-modal, #reviews {
+    .modal-content {
+        background-color: $dark-color2;
+        color: white;
+        .stars {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .checked {
+        color: gold;
+    }
+    #error {
+        display: none;
+    }
+}
+
+//Index page
+.index-body {
+    background-color: $dark-color1;
+    border-radius: 25px;
+    padding: 2%;
+    margin: 1%;
+    display: flex;
+    flex-wrap: wrap;
+
+    .container {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .movie-card {
+        margin: 1%;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        width: 14em;
+        @media only screen and (max-width: 425px) {
+            width: 10em;
+        }
+        .poster-container {
+            position: relative;
+            text-align: center;
+            img{
+                box-shadow: 4px 4px 3px black;
+                height: auto;
+                width: 100%;
+            }
+            .bottom-left {
+                position: absolute;
+                bottom: 8px;
+                left: 16px;
+                background-color: $dark-low-opacity;
+                color: white;
+                
+                .checked {
+                    color: gold;
+                }
+            }
+        }
+        
+        p {
+            color: ghostwhite;
+            text-shadow: 1px 1px 1px $dark-color2;
+        }
+    }
+}
+
+/* sass ratings50/static/ratings50/style.scss:ratings50/static/ratings50/style.css */
